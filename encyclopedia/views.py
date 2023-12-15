@@ -13,7 +13,18 @@ def md_to_html(title):
 
 
 def index(request):
-    return render(request, "encyclopedia/index.html", {
+    return render(request, "encyclopedia\index.html", {
         "entries": util.list_entries()
     })
 
+def entry(request, entry):
+    html_content = md_to_html(entry)
+    if html_content is not None:
+        return render(request, "encyclopedia\entry.html", {
+            "content": html_content,
+            "title": entry
+        })
+    else: 
+        return render(request, "encyclopedia\error.html", {
+            "title": entry
+        })
