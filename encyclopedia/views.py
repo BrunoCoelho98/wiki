@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from markdown2 import Markdown
+import random
 
 from . import util
 
@@ -26,7 +27,8 @@ def entry(request, entry):
         })
     else: 
         return render(request, "encyclopedia\error.html", {
-            "title": entry
+            "title": entry,
+            "message": "This page doesn't exists"
         })
         
 def search(request):
@@ -51,3 +53,47 @@ def search(request):
 def new_page(request):
     if request.method == "GET":
         return render(request, "encyclopedia\createPage.html")    
+    else:
+        title = request.POST['title']
+        content = request.POST['content']
+        if util.get_entry(title) is not None:
+            return render(request, "encyclopedia\error.html", {
+                "message": "Page already exists"
+            })
+        else:
+            util.save_entry(title, content)
+            html_content = md_to_html(title)
+            return render(request, "encyclopedia\entry.html", {
+                "title": title,
+                "content": html_content
+            })
+            
+def edit(request):
+    if request.method == "POST":
+        title = request.POST['entry_title']
+        content = util.get_entry(title)
+        return render(request, "encyclopedia\editPage.html", {
+            "title": title,
+            "content": content
+        })
+        
+def saveEdit(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        content = request.POST['content']
+        util.save_entry(title, content)
+        html_content = md_to_html(title)
+        return render(request, "encyclopedia\entry.html", {
+            "title": title,
+            "content": html_content
+            })
+
+
+def rand(request):
+    Entries = util.list_entries()
+    choosen = random.choice(Entries)
+    html_content = md_to_html(choosen)
+    return render(request, "encyclopedia\entry.html", {
+        "title": choosen,
+        "content": html_content
+        })

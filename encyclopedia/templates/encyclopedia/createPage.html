@@ -8,12 +8,12 @@
     <h1>New Page</h1>
 
     <form action="{% url 'new_page' %}" method="POST">
-
+        {% csrf_token %}
         <label for="title">Title:</label><br>
-        <input type="text" id="title" name="title"><br>
+        <input type="text" id="title" name="title" placeholder="Enter the title"><br>
         <label for="content">Content:</label>
         <br>
-        <textarea id="content" name="content"></textarea><br>
+        <textarea id="content" name="content" placeholder="Enter the content"></textarea><br>
         <input type="submit" value="New Page" class="btn btn-primary">
 
     </form>
