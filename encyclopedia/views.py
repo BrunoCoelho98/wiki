@@ -45,6 +45,9 @@ def search(request):
                     entries.append(entry)
             return render(request, "encyclopedia\search.html", {
             "entries": entries,
-            "search": True,
             "value": value
             })
+            
+def new_page(request):
+    if request.method == "GET":
+        return render(request, "encyclopedia\createPage.html")    
